@@ -5,12 +5,15 @@ const app = express()
 const PORT = process.env.PORT;
 
 
-let Tasks = [];
+let Tasks = [
+    {id:uuidv4(), task:"cleaning" ,completed:"false"},
+    {id:uuidv4(), task:"cooking", completed:"false"}
+];
 
 app.use(express.json());
 
 app.get('/',(req,res)=>{
-    res.send("This is a crud app");
+    res.json(Tasks);
 })
 
 // Create a task
