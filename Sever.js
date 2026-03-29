@@ -27,8 +27,22 @@ app.post('/create',( req,res)=> {
     Tasks.push(Task);
     res.status(201).json(Task);
 })
-///silk202 want to add single read!
+///silk202 wants to add a single read
+app.get("/task/:id", (req, res) => {
+  const { id } = req.params;
 
+  const task = Tasks.find((t) => t.id === id);
+
+  if (!task) {
+    return res.status(404).json({
+      error: "Task not found"
+    });
+  }
+
+  return res.status(200).json({
+    data: task
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Server started at ${PORT}`)
