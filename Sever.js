@@ -19,14 +19,16 @@ app.get('/', (req, res) => {
 
 // Create a task
 app.post('/create',( req,res)=> {
+  const {task,completed} = req.body;
     const Task = {
         id : uuidv4(),
-        task : req.body.task,
-        completed: false
+        task,
+        completed: typeof completed === "boolean" ? completed : false
     }
     Tasks.push(Task);
     res.status(201).json(Task);
 })
+
 ///silk202 wants to add a single read
 app.get("/task/:id", (req, res) => {
   const { id } = req.params;
@@ -39,10 +41,33 @@ app.get("/task/:id", (req, res) => {
     });
   }
 
-  return res.status(200).json({
-    data: task
-  });
+  return res.status(200).json(task);
 });
+//update/patch operation
+app.patch('/task/:id',(req,res)=>{
+    const task = Tasks.find((i) => i.id === (req.params.id));
+    if(!task) return res.status(404).json({message:"task not found!"});
+    Object.assign(task,req.body);// patch/merge the todos :completed:true
+    res.status(201).send();// success
+});
+
+
+//added delete operation
+app.delete('/task/:id', (req,res)=>{
+    const del = Tasks.findIndex((i)=>i.id === req.params.id);
+    if (del === -1) {
+        return res.status(404).json({ message: "Task not found!" });
+    }
+    const deletedTodo = Tasks.splice(del, 1);
+
+    res.status(204).send({
+        message: "todo deleted successfully",
+        deleted: deletedTodo[0]
+    });
+
+})
+
+
 
 app.listen(PORT, () => {
   console.log(`Server started at ${PORT}`)
