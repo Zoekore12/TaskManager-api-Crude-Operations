@@ -44,20 +44,6 @@ app.get("/task/:id", (req, res) => {
   });
 });
 
-app.patch('/create/:id', (req, res) => {
-    const todo = todos.find((i) => i.id === (req.params.id));
-
-    if (!todo) {
-        return res.status(404).json({
-            message: "todo not found!"
-        });
-    }
-
-    Object.assign(todo, req.body); // patch/merge the todos :completed:true
-
-    res.status(201).send(); // success
-});
-
 app.listen(PORT, () => {
   console.log(`Server started at ${PORT}`)
 })
